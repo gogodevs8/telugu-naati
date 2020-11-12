@@ -124,7 +124,7 @@ function Contact() {
 
                     <Form.Group controlId="exampleForm.ControlSelect1">
                       <Form.Label>Choose Your Course</Form.Label>
-                      <Form.Control as="select" id="pay" onBlur={()=>setPrice(document.getElementById('pay').value)}>
+                      <Form.Control as="select" id="pay" onChange={()=>setPrice(document.getElementById('pay').value)}>
                         <option value="149">Crash Course - $149.00</option>
                         <option value="249">Short Term Course - $249.00</option>
                         <option value="449">Intensive Course - $449.00</option>
@@ -160,7 +160,6 @@ function Contact() {
                     <Button
                       onClick={paymentHandler}
                       variant="primary"
-                      type="submit"
                       style={{ marginBottom: "20px" }}
                     >
                       Pay & Submit
