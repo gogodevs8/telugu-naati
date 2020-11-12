@@ -1,0 +1,31 @@
+.overlay {
+  position: absolute;
+  top: 42%;
+  left: 12%;
+}
+
+.carousel-inner {
+  height: 100vh;
+}
+.caption {
+  color: white;
+  font-size: "50px";
+  font-weight: 400;
+}
+
+@media screen and (max-width: 768px) {
+  .overlay {
+    position: absolute;
+    top: 40%;
+    left: 15%;
+  }
+  .carousel-inner {
+    height: 100vh;
+  }
+
+  .caption {
+      color: white;
+      font-size: 25px;
+      font-weight: 400;
+  }
+}
