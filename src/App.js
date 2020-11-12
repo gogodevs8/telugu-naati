@@ -10,8 +10,6 @@ import Footer from "./components/Footer";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { BrowserRouter, Route, Redirect } from "react-router-dom";
-import Pay from "./components/Pay";
-import Paypal from "./components/Paypal";
 
 function App() {
   useEffect(() => {
@@ -69,7 +67,6 @@ function App() {
       </section>
       <br />
       <br />
-      <Paypal/>
       <Footer />
     </div>
   );

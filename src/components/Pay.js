@@ -53,7 +53,7 @@ function Pay() {
     
     <div>
         <Button onClick={() => setPaid(true)}>Pay</Button>
-      {paidFor ? (
+      {true ? (
         <div>
           <h1>{product.description}</h1>
           <div ref={(v) => (paypalRef = v)}></div>

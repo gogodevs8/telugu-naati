@@ -1,47 +1,58 @@
-import React, { useState } from "react";
+import React, { useState,useEffect} from "react";
 import { Col, Row, Container, Card, Form, Button } from "react-bootstrap";
-import Axios from "axios";
-import Paypal from "./Paypal";
-import Pay from "./Pay";
 
 function Contact() {
+  const [load,setLoaded]= useState(false);
+  const [price , setPrice] = useState(149);
+  useEffect(()=>{
+    const script = document.createElement("script");
+    script.src =
+      "https://www.paypalobjects.com/api/checkout.js";
+    script.addEventListener("load", () => setLoaded(true));
+    document.body.appendChild(script);
+  })
 
-const [checkout , setCheckout] = useState(true)
+  const paymentHandler=()=>{
+      console.log(price);
+      document.getElementById('paypal-button').innerHTML='';
+      window.paypal.Button.render({
+          // Configure environment
+          env: 'sandbox',
+          client: {
+          sandbox: 'demo_sandbox_client_id',
+          production: 'demo_production_client_id'
+          },
+          // Customize button (optional)
+          locale: 'en_US',
+          style: {
+            size: 'large',
+            color: 'gold',
+            shape: 'pill',
+          },
+          // Enable Pay Now checkout flow (optional)
+          commit: true,
 
-  const paymentHandler = async (e) => {
-    const API_URL = "http://localhost:8000/";
-    e.preventDefault();
-    const amount = document.getElementById("pay").value;
-    const orderUrl = `${API_URL}order/${amount}`;
-    const response = await Axios.get(orderUrl);
-    const { data } = response;
-    console.log(amount);
-    if (amount == 149 || amount == 249 || amount == 449) {
-      const options = {
-        key: "rzp_test_UaDS2uihjYJINF",
-        name: "Telugu Naati CCL",
-        description: "Some Description",
-        order_id: data.id,
-        handler: async (response) => {
-          try {
-            const paymentId = response.razorpay_payment_id;
-            const url = `${API_URL}capture/${paymentId}`;
-            const captureResponse = await Axios.post(url, {});
-            console.log(captureResponse.data);
-          } catch (err) {
-            console.log(err);
+          // Set up a payment
+          payment: function(data, actions) {
+          return actions.payment.create({
+              transactions: [{
+              amount: {
+                  total:price,
+                  currency: 'AUD'
+              }
+              }]
+          });
+          },
+          // Execute the payment
+          onAuthorize: function(data, actions) {
+          return actions.payment.execute().then(function() {
+              // Show a confirmation message to the buyer
+              window.alert('Thank you for your purchase!');
+              //add function for email or etc
+          });
           }
-        },
-        theme: {
-          color: "#27B391",
-        },
-      };
-      const rzp1 = new window.Razorpay(options);
-      rzp1.open();
-    } else {
-      alert("Some error occured");
+      }, '#paypal-button');
     }
-  };
 
   return (
     <div>
@@ -61,6 +72,7 @@ const [checkout , setCheckout] = useState(true)
                 src="https://image.freepik.com/free-vector/call-center_23-2148177342.jpg"
                 // src="https://images.unsplash.com/photo-1551721434-8b94ddff0e6d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=401&q=80"
                 style={{ height: "100%", width: "100%" }}
+                alt=""
               />
             </Col>
             <Col xs={12} md={12} lg={6}>
@@ -112,7 +124,7 @@ const [checkout , setCheckout] = useState(true)
 
                     <Form.Group controlId="exampleForm.ControlSelect1">
                       <Form.Label>Choose Your Course</Form.Label>
-                      <Form.Control as="select" id="pay">
+                      <Form.Control as="select" id="pay" onBlur={()=>setPrice(document.getElementById('pay').value)}>
                         <option value="149">Crash Course - $149.00</option>
                         <option value="249">Short Term Course - $249.00</option>
                         <option value="449">Intensive Course - $449.00</option>
@@ -149,9 +161,11 @@ const [checkout , setCheckout] = useState(true)
                       onClick={paymentHandler}
                       variant="primary"
                       type="submit"
+                      style={{ marginBottom: "20px" }}
                     >
                       Pay & Submit
                     </Button>
+                    <div id="paypal-button"></div>
                   </Form>
                 </Col>
               </Row>
