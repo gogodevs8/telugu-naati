@@ -1,58 +1,63 @@
-import React, { useState,useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { Col, Row, Container, Card, Form, Button } from "react-bootstrap";
 
 function Contact() {
-  const [load,setLoaded]= useState(false);
-  const [price , setPrice] = useState(149);
-  useEffect(()=>{
+  const [load, setLoaded] = useState(false);
+  const [price, setPrice] = useState(149);
+  useEffect(() => {
     const script = document.createElement("script");
-    script.src =
-      "https://www.paypalobjects.com/api/checkout.js";
+    script.src = "https://www.paypalobjects.com/api/checkout.js";
     script.addEventListener("load", () => setLoaded(true));
     document.body.appendChild(script);
-  })
+  });
 
-  const paymentHandler=()=>{
-      console.log(price);
-      document.getElementById('paypal-button').innerHTML='';
-      window.paypal.Button.render({
-          // Configure environment
-          env: 'sandbox',
-          client: {
-          sandbox: 'demo_sandbox_client_id',
-          production: 'demo_production_client_id'
-          },
-          // Customize button (optional)
-          locale: 'en_US',
-          style: {
-            size: 'large',
-            color: 'gold',
-            shape: 'pill',
-          },
-          // Enable Pay Now checkout flow (optional)
-          commit: true,
+  const paymentHandler = () => {
+    console.log(price);
+    document.getElementById("paypal-button").innerHTML = "";
+    window.paypal.Button.render(
+      {
+        // Configure environment
+        env: "sandbox",
+        client: {
+          sandbox: "demo_sandbox_client_id",
+          production: "demo_production_client_id",
+        },
+        // Customize button (optional)
+        locale: "en_US",
+        style: {
+          size: "large",
+          color: "gold",
+          shape: "pill",
+        },
+        // Enable Pay Now checkout flow (optional)
+        commit: true,
 
-          // Set up a payment
-          payment: function(data, actions) {
+        // Set up a payment
+        payment: function (data, actions) {
           return actions.payment.create({
-              transactions: [{
-              amount: {
-                  total:price,
-                  currency: 'AUD'
-              }
-              }]
+            transactions: [
+              {
+                amount: {
+                  total: price,
+                  currency: "AUD",
+                },
+              },
+            ],
           });
-          },
-          // Execute the payment
-          onAuthorize: function(data, actions) {
-          return actions.payment.execute().then(function() {
-              // Show a confirmation message to the buyer
-              window.alert('Thank you for your purchase!');
-              //add function for email or etc
+        },
+        // Execute the payment
+        onAuthorize: function (data, actions) {
+          return actions.payment.execute().then(function () {
+            //add function for email or etc and all fields are required
+
+            // Show a confirmation message to the buyer
+            window.alert("Thank you for your purchase!");
           });
-          }
-      }, '#paypal-button');
-    }
+        },
+      },
+      "#paypal-button"
+    );
+  };
 
   return (
     <div>
@@ -124,7 +129,13 @@ function Contact() {
 
                     <Form.Group controlId="exampleForm.ControlSelect1">
                       <Form.Label>Choose Your Course</Form.Label>
-                      <Form.Control as="select" id="pay" onChange={()=>setPrice(document.getElementById('pay').value)}>
+                      <Form.Control
+                        as="select"
+                        id="pay"
+                        onChange={() =>
+                          setPrice(document.getElementById("pay").value)
+                        }
+                      >
                         <option value="149">Crash Course - $149.00</option>
                         <option value="249">Short Term Course - $249.00</option>
                         <option value="449">Intensive Course - $449.00</option>
